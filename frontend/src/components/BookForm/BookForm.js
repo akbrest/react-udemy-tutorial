@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addBook } from '../../redux/books/actionCreators';
-import { v4 as uuidv4 } from 'uuid';
 import booksData from '../../data/books.json';
+import creatBookWithId from '../../utils/createBookWithId';
 import './BookForm.css';
 
 const BookForm = () => {
@@ -14,13 +14,7 @@ const BookForm = () => {
     e.preventDefault();
 
     if (title && author) {
-      const book = {
-        title: title,
-        author: author,
-        id: uuidv4(),
-        isFavorite: false,
-      };
-      dispatch(addBook(book));
+      dispatch(addBook(creatBookWithId({ title, author })));
       setTitle('');
       setAuthor('');
     }
@@ -29,13 +23,8 @@ const BookForm = () => {
   const handleAdRandomBook = () => {
     const randomIndex = Math.floor(Math.random() * booksData.length);
     const randomBook = booksData[randomIndex];
-    const randomBookWithId = {
-      ...randomBook,
-      id: uuidv4(),
-      isFavorite: false,
-    };
 
-    dispatch(addBook(randomBookWithId));
+    dispatch(addBook(creatBookWithId(randomBook)));
   };
 
   return (
