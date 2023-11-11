@@ -1,12 +1,16 @@
 import { useDispatch, useSelector } from 'react-redux';
 import './BookList.css';
 import { deleteBook, toggleFavorite } from '../../redux/books/actionCreators';
-import { selectTitleFilter } from '../../redux/sclices/filterSlice';
+import {
+  selectTitleFilter,
+  selectAuthorFilter,
+} from '../../redux/sclices/filterSlice';
 import { BsBookmarkStar, BsBookmarkStarFill } from 'react-icons/bs';
 
 const BookList = () => {
   const books = useSelector((state) => state.books);
   const titleFilter = useSelector(selectTitleFilter);
+  const authorFilter = useSelector(selectAuthorFilter);
   const dispatch = useDispatch();
 
   const handleDeleteBook = (id) => {
@@ -22,7 +26,11 @@ const BookList = () => {
       .toLowerCase()
       .includes(titleFilter.toLowerCase());
 
-    return matchesTitle;
+    const matchesAuthor = book.author
+      .toLowerCase()
+      .includes(authorFilter.toLowerCase());
+
+    return matchesTitle && matchesAuthor;
   });
 
   return (
@@ -35,7 +43,7 @@ const BookList = () => {
           {filteredBooks.map((book, i) => (
             <li key={book.id}>
               <div className="book-info">
-                {++i}. {book.title} by <strong>{book.author}</strong>
+                {++i}. <i>{book.title}</i> by <strong>{book.author}</strong>
               </div>
               <div className="book-actions">
                 <span onClick={() => handleToggleBook(book.id)}>
