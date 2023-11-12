@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-const creatBookWithId = (book) => {
+const createBookWithId = (book) => {
   return {
     ...book,
     isFavorite: false,
@@ -8,4 +8,4 @@ const creatBookWithId = (book) => {
   };
 };
 
-export default creatBookWithId;
+export default createBookWithId;

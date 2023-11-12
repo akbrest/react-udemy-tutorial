@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addBook } from '../../redux/sclices/booksSlice';
+import axios from 'axios';
 import booksData from '../../data/books.json';
-import creatBookWithId from '../../utils/createBookWithId';
+import createBookWithId from '../../utils/createBookWithId';
 import './BookForm.css';
 
 const BookForm = () => {
@@ -14,17 +15,28 @@ const BookForm = () => {
     e.preventDefault();
 
     if (title && author) {
-      dispatch(addBook(creatBookWithId({ title, author })));
+      dispatch(addBook(createBookWithId({ title, author })));
       setTitle('');
       setAuthor('');
     }
   };
 
-  const handleAdRandomBook = () => {
+  const handleAddRandomBook = () => {
     const randomIndex = Math.floor(Math.random() * booksData.length);
     const randomBook = booksData[randomIndex];
 
-    dispatch(addBook(creatBookWithId(randomBook)));
+    dispatch(addBook(createBookWithId(randomBook)));
+  };
+
+  const handleAddRandomViaAPI = async () => {
+    try {
+      const res = await axios.get('http://localhost:4000/random-book');
+
+      if (res?.data?.title && res?.data?.author)
+        dispatch(addBook(createBookWithId(res.data)));
+    } catch (error) {
+      console.log('Error fetching random book', error);
+    }
   };
 
   return (
@@ -49,8 +61,11 @@ const BookForm = () => {
             onChange={(e) => setAuthor(e.target.value)}
           />
           <button type="submith">Add Book</button>
-          <button type="button" onClick={handleAdRandomBook}>
+          <button type="button" onClick={handleAddRandomBook}>
             Add Random
+          </button>
+          <button type="button" onClick={handleAddRandomViaAPI}>
+            Add Random via API
           </button>
         </div>
       </form>
